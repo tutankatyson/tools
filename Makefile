@@ -1,47 +1,85 @@
-NAME = libftprintf.a
 
-SRC = ft_atoi.c ft_bzero.c ft_calloc.c ft_isalnum.c ft_isalpha.c \
-	  ft_isascii.c ft_isdigit.c ft_isprint.c ft_itoa.c ft_memchr.c \
-	  ft_memcmp.c ft_memcpy.c ft_memmove.c ft_memset.c ft_putchar_fd.c \
-	  ft_putendl_fd.c ft_putnbr_fd.c ft_putstr_fd.c ft_split.c ft_strchr.c \
-	  ft_strdup.c ft_striteri.c ft_strjoin.c ft_strlcat.c ft_strlcpy.c \
-	  ft_strlen.c ft_strmapi.c ft_strncmp.c ft_strnstr.c ft_strrchr.c \
-	  ft_strtrim.c ft_substr.c ft_tolower.c ft_toupper.c ft_putnbrbase.c \
-	  ft_uitoa.c
+# make -C <directorio donde hacer make"
 
-PRINT_SRC = ft_magic.c ft_magic2.c ft_printf.c ft_printtools.c
+NAME = push_swap
 
-FLAGS = -Wall -Werror -Wextra
+
+SRC = main.c
+
+SRC_TEST = maintester.c
+
+OBJ = main.o
+
+LIB = ./lib/libftprintf.a
+
+FLAGS = -Wall -Wextra -Werror
+
 
 all: $(NAME)
 
+$(NAME):$(OBJ) $(LIB)
+	@echo llamada a NAME:
+	gcc $(OBJ) $(LIB) -o $(NAME)
 
-$(NAME): 
-	gcc -c $(FLAGS) $(PRINT_SRC) ./libft/*.c
-	ar -crs $(NAME) *.o
+$(OBJ):
+	@echo llamada a OBJ:
+	gcc $(FLAGS) -c $(SRC)
+
+$(LIB):
+	
+ARG = 2 3 4 1 5
+
+FIGTH_TEST = 11 111 1 1111 111111 1111111 11111 11111111 \
+				2 22222222 2222 222 2222222 222222 22222 \
+			3333 333 3 33333 333333 12 3333333 33 \
+			4 44 444 4444 44444 444444 4444444 
+
+tmake testest0: fclean
+	gcc $(FLAGS) $(SRC_TEST) -o $(NAME)
+	./push_swap $(ARG) |./checker_Mac $(ARG)
+	./push_swap $(ARG)
+
+
+test: fclean $(NAME)
+	./$(NAME) $(FIGTH_TEST) 
+
+test10: fclean $(NAME)
+	./$(NAME) 1 111111111 2 22222222 222222 33 1111 555555 555 5555555 
+
+test3: fclean $(NAME)
+	./$(NAME) 2 22 222 
+test31: fclean $(NAME)
+	./$(NAME) 2 222 22 
+test32: fclean $(NAME)
+	./$(NAME) 22 2 222 
+test33: fclean $(NAME)
+	./$(NAME) 22 222 2 
+test34: fclean $(NAME)
+	./$(NAME) 222 2 22
+test35: fclean $(NAME)
+	./$(NAME) 222 22 2
+
+
+test5: fclean $(NAME)
+	./$(NAME) 22 2222 2 22222 222  
 
 
 clean:
-	@ rm -f *.o
+	rm -f $(OBJ)
+	rm -f ./lib/*.o
 
-fclean: clean
+fclean:clean
 	rm -f $(NAME)
 
-re: fclean all
-
-# Esta regla compila todos los archivos .c, incluido main.c, y ejecuta el programa creado
-main:
-	gcc  $(FLAGS) *.c ./libft/*.c
-	@echo - - - - - TEST PROGRAM: - - - - -
-	@./a.out
-	@make clean
-
-# Esta regla hace stage, commit y push al directorio git de todos los archivos 
 push:
 	git add .
 	git status
 	git commit -m "Last Commit"
 	git push
 
-norm:
-	norminette $(PRINT_SRC)
+
+pr:
+	./push_swap $(FIGTH_TEST)
+
+pelea:
+	./push_swap $(FIGTH_TEST) |./checker_Mac $(FIGTH_TEST)
